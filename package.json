@@ -8,6 +8,8 @@
     "dev": "vite",
     "electron:dev": "vite dev --host --port 5180 && electron .",
     "build": "vite build && electron-builder",
+    "deploy": "vite build --base=/lottery-vue3/ && gh-pages -d dist",
+    "predeploy": "npm run build",
     "preview": "vite preview",
     "serve": "vite preview",
     "type-check": "vue-tsc --noEmit"
