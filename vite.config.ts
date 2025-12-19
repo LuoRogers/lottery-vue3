@@ -33,7 +33,7 @@ export default defineConfig({
     sourcemap: false,
     chunkSizeWarningLimit: 1000,
     rollupOptions: {
-      external: ['vue-router'],
+      external: [],
       output: {
         manualChunks: {
           vue: ['vue', 'pinia'],
