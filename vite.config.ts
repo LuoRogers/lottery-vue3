@@ -36,7 +36,7 @@ export default defineConfig({
       external: ['vue-router'],
       output: {
         manualChunks: {
-          vue: ['vue', 'pinia', 'vue-router'],
+          vue: ['vue', 'pinia'],
           ui: ['daisyui', 'tailwindcss'],
         }
       }
