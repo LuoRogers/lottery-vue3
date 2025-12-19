@@ -7,7 +7,7 @@
   "scripts": {
     "dev": "vite",
     "electron:dev": "vite dev --host --port 5180 && electron .",
-    "build": "vite build && electron-builder",
+    "build": "vite build",
     "deploy": "vite build --base=/lottery-vue3/ && gh-pages -d dist",
     "predeploy": "pnpm run build",
     "preview": "vite preview",
