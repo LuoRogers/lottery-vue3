@@ -15,7 +15,7 @@ function createWindow() {
   })
 
   if (process.env.NODE_ENV === 'development') {
-    mainWindow.loadURL('http://localhost:5173')
+    mainWindow.loadURL('http://localhost:5180')
     mainWindow.webContents.openDevTools()
   } else {
     const indexPath = path.join(app.getAppPath(), 'dist/index.html')

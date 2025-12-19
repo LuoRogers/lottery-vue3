@@ -1,46 +1,36 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-import { useLotteryStore } from '@/stores/lottery'
+import { useLotteryStore, type Prize } from '@/stores/lottery'
 import { confirm } from '@/services/confirmService'
 import { edit } from '@/services/editService'
 import PrizeForm from '@/components/PrizeForm.vue'
+import { Icon } from '@iconify/vue'
 
 const store = useLotteryStore()
-const newPrize = ref({
-  name: '',
-  quantity: 1,
-  image: '',
-  description: ''
-})
-const editingPrize = ref({
-  pid: '',
-  name: '',
-  quantity: 1,
-  image: '',
-  description: ''
-})
 
-const addPrize = () => {
-  if (!newPrize.value.name) return
-  store.addPrize({ ...newPrize.value })
-  newPrize.value = {
+const openAddModal = async () => {
+  // 这里不需要传递pid，因为后端会生成
+  const result = await edit<Omit<Prize, 'pid'>>({
+    title: '添加奖品',
+    formComponent: PrizeForm,
+    formProps: {}
+  }, {
     name: '',
     quantity: 1,
     image: '',
     description: ''
+  })
+
+  if (result && result.name) {
+    store.addPrize(result as Prize)
   }
 }
 
-const openEditModal = async (prize: any) => {
-  const result = await edit({
+const openEditModal = async (prize: Prize) => {
+  const result = await edit<Prize>({
     title: '编辑奖品',
-    formComponent: PrizeForm
-  }, {
-    name: prize.name,
-    quantity: prize.quantity,
-    image: prize.image,
-    description: prize.description
-  })
+    formComponent: PrizeForm,
+    formProps: {}
+  }, { ...prize })
 
   if (result) {
     store.updatePrize(prize.pid, result)
@@ -78,57 +68,14 @@ const clearPrizes = async () => {
       <div class="card-body">
         <h2 class="card-title">奖品管理</h2>
         
-        <div class="flex flex-wrap gap-4">
-          <div class="form-control flex-1">
-            <label class="label">
-              <span class="label-text">奖品名称</span>
-            </label>
-            <input 
-              v-model="newPrize.name" 
-              class="input input-bordered"
-              placeholder="奖品名称"
-            >
-          </div>
-          <div class="form-control flex-1">
-            <label class="label">
-              <span class="label-text">奖品数量</span>
-            </label>
-            <input 
-              v-model.number="newPrize.quantity" 
-              type="number" 
-              min="1" 
-              class="input input-bordered"
-              placeholder="数量"
-            >
-          </div>
-          <div class="form-control flex-1">
-            <label class="label">
-              <span class="label-text">奖品图片URL</span>
-            </label>
-            <input 
-              v-model="newPrize.image" 
-              class="input input-bordered"
-              placeholder="图片URL"
-            >
-          </div>
-          <div class="form-control flex-1">
-            <label class="label">
-              <span class="label-text">奖品描述</span>
-            </label>
-            <input 
-              v-model="newPrize.description" 
-              class="input input-bordered"
-              placeholder="描述"
-            >
-          </div>
-          <div class="form-control">
-            <button 
-              @click="addPrize" 
-              class="btn btn-primary mt-6"
-            >
-              添加奖品
-            </button>
-          </div>
+        <div class="flex justify-end mb-6">
+          <button
+            @click="openAddModal"
+            class="btn btn-primary"
+          >
+            <Icon icon="mdi:plus" class="w-4 h-4 mr-2" />
+            添加奖品
+          </button>
         </div>
 
         <div class="overflow-x-auto mt-4">
@@ -158,16 +105,18 @@ const clearPrizes = async () => {
                 </td>
                 <td>{{ p.description || '-' }}</td>
                 <td class="flex gap-2">
-                  <button 
+                  <button
                     @click="openEditModal(p)"
                     class="btn btn-sm btn-info"
                   >
+                    <Icon icon="mdi:pencil-outline" class="w-4 h-4 mr-1" />
                     编辑
                   </button>
-                  <button 
+                  <button
                     @click="removePrize(p.pid)"
                     class="btn btn-error btn-sm"
                   >
+                    <Icon icon="mdi:delete-outline" class="w-4 h-4 mr-1" />
                     删除
                   </button>
                 </td>
@@ -177,10 +126,11 @@ const clearPrizes = async () => {
         </div>
 
         <div class="flex justify-end mt-4">
-          <button 
-            @click="clearPrizes" 
+          <button
+            @click="clearPrizes"
             class="btn btn-error"
           >
+            <Icon icon="mdi:delete-sweep" class="w-4 h-4 mr-2" />
             清空奖品
           </button>
         </div>

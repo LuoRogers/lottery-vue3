@@ -1,3 +1,6 @@
+/* Import custom themes */
+@import './theme.css';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -6,3 +9,4 @@
 body {
   @apply min-h-screen bg-base-100 text-base-content;
 }
+

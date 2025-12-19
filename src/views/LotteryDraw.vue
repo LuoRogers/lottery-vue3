@@ -50,16 +50,32 @@
                 最多可抽: {{ maxDrawCount }} 人
               </span>
             </div>
-            <input 
-              v-model.number="drawCount" 
-              type="number" 
-              min="1" 
-              class="input input-bordered w-full text-base"
-              :class="{'input-error': drawCount > maxDrawCount || drawCount < 1}"
-              :max="maxDrawCount"
-              :disabled="isDrawing || !selectedPrize"
-              @input="validateDrawCount"
-            >
+            <div class="flex items-center gap-2">
+              <button
+                @click="decrementDrawCount"
+                class="btn btn-primary"
+                :disabled="isDrawing || !selectedPrize || drawCount <= 1"
+              >
+                -
+              </button>
+              <input
+                v-model.number="drawCount"
+                type="number"
+                min="1"
+                class="input input-bordered w-full text-base text-center"
+                :class="{'input-error': drawCount > maxDrawCount || drawCount < 1}"
+                :max="maxDrawCount"
+                :disabled="isDrawing || !selectedPrize"
+                @input="validateDrawCount"
+              >
+              <button
+                @click="incrementDrawCount"
+                class="btn btn-primary"
+                :disabled="isDrawing || !selectedPrize || drawCount >= maxDrawCount"
+              >
+                +
+              </button>
+            </div>
             <div v-if="drawCount > maxDrawCount || drawCount < 1" class="text-sm text-error">
               {{ drawCount < 1 ? '至少抽取1人' : `最多只能抽取${maxDrawCount}人` }}
             </div>
@@ -178,6 +194,18 @@ const canDraw = computed(() => {
 
     isDrawing.value = false
 }
+
+  const decrementDrawCount = () => {
+    if (drawCount.value > 1) {
+      drawCount.value--
+    }
+  }
+
+  const incrementDrawCount = () => {
+    if (drawCount.value < maxDrawCount.value) {
+      drawCount.value++
+    }
+  }
 
   const validateDrawCount = () => {
     if (drawCount.value > maxDrawCount.value) {

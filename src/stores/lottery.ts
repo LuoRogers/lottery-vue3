@@ -3,14 +3,14 @@ import { ref } from 'vue'
 import * as XLSX from 'xlsx'
 import { useDialog } from '@/services/dialogService'
 
-interface Participant {
+export interface Participant {
   pid: string
   name?: string
   seatNumber?: string
   notes?: string
 }
 
-interface Prize {
+export interface Prize {
   pid: string
   name: string
   quantity: number

@@ -2,6 +2,7 @@ import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import electron from 'vite-plugin-electron'
 import path from 'path'
+import AutoImport from 'unplugin-auto-import/vite'
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -11,6 +12,13 @@ export default defineConfig({
     // electron({
     //   entry: 'electron/main.ts',
     // }),
+    AutoImport({
+      imports: [
+        'vue',
+        'pinia',
+      ],
+      dts: true,
+    }),
   ],
   resolve: {
     alias: {

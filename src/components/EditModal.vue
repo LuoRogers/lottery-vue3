@@ -16,15 +16,18 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch } from 'vue'
+import { ref, computed, watch, nextTick } from 'vue'
 
-const props = defineProps<{
-  title: string
+const props = withDefaults(defineProps<{
+  title?: string
   maxWidth?: 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl' | '4xl' | '5xl' | 'full'
   confirmText?: string
   cancelText?: string
   show?: boolean
-}>()
+}>(), {
+  title: '编辑',
+  show: false
+})
 
 const emit = defineEmits<{
   (e: 'confirm'): void
@@ -41,13 +44,15 @@ const cancelText = props.cancelText || '取消'
 
 const modal = ref<HTMLDialogElement>()
 
-watch(() => props.show, (newVal) => {
+watch(() => props.show, async (newVal) => {
   if (newVal) {
+    // Ensure the component is fully mounted and modal ref is available
+    await nextTick()
     modal.value?.showModal()
   } else {
     modal.value?.close()
   }
-})
+}, { immediate: true })
 
 const show = () => {
   modal.value?.showModal()
